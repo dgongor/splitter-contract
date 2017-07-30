@@ -34,7 +34,7 @@ Once Carol & Bob meet and Bob gives Carol his password from Alice, Carol can sub
 
 Of course, for safety, no one should send their passwords to the blockchain in the clear.
 
-##Stretch goals:
+## Stretch goals:
 
 * add a deadline, after which Alice can claim back the unchallenged Ether
 * add a limit to how far in the future the deadline can be
