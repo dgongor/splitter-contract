@@ -1,12 +1,11 @@
 pragma solidity ^0.4.4;
 
 contract Splitter {
-	address	public 	owner;  // alice
+	address	public 	owner;
 	address	public 	bob;
 	address public 	carol;
 
-	uint	public	bobBalance;
-	uint 	public 	carolBalance;
+	mapping(address => uint) public balances;
 
 	function Splitter(
 		address _bob,
@@ -21,17 +20,19 @@ contract Splitter {
 		payable 
 		returns (bool)
 	{
-		if(msg.sender != owner) throw;
+		if(msg.value == 0) throw;
+		if(msg.sender == bob || msg.sender == carol) throw;
 		
 		var bobSplit = msg.value / 2;
 		var carolSplit = msg.value - bobSplit;
 		
 		if( !bob.send(bobSplit) ) throw;
-		bobBalance += bobSplit;
-		
+		balances[bob] += bobSplit;
+
 		if( !carol.send(carolSplit) ) throw;
-        carolBalance += carolSplit;
+        balances[carol] += carolSplit;
 
 		return true;
 	}
+	
 }
