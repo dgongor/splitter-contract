@@ -3,8 +3,7 @@ pragma solidity ^0.4.4;
 contract Remittance {
     address public owner;
     address public carol;
-    bool public validated;
-    uint public amount;
+    bool public submitted;
     bool public released;
     
     function Remittance(
@@ -32,33 +31,40 @@ contract Remittance {
         return 0;
     }
     
-    function releaseEther()
+    function submitEther()
         payable 
-        returns (bool success)
+        returns (bool)
     {
         if(msg.sender != owner) throw;
         if(released) throw;
-        if(!validated) throw;
+        if(submitted) throw;
         if(msg.value == 0) throw;
         
-        amount = msg.value;
-        if(!carol.send(amount)) throw;
-        released = true;
+        submitted = true;
         
-        return true;   
+        return true;
     }
     
-    function validateTransfer(
+    function getBalance()
+        constant
+        returns (uint)
+    {
+        return this.balance; 
+    }
+    
+    function releaseEther(
         string emailPassword,
         string smsPassword)
-        returns (bool success)
+        payable
+        returns (bool)
     {
         if(msg.sender != carol) throw;
         if(released) throw;
-        if(validated) throw;
+        if(!submitted) throw;
         if(compare("email1", emailPassword) != 0 && compare("sms1", smsPassword) != 0) throw;  
         
-        validated = true;
+        if(!carol.send(this.balance)) throw;
+        released = true;
         
         return true;
     }
