@@ -1,6 +1,7 @@
 pragma solidity ^0.4.4;
 
 contract Splitter {
+
     address public  alice;
 	address	public 	bob;
 	address public 	carol;
